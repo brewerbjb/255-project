@@ -39,6 +39,7 @@ public class crackerClicker extends javax.swing.JFrame implements Money {
         moneyPerClick = new javax.swing.JLabel();
         tokensBox = new javax.swing.JLabel();
         nextAchievementBox = new javax.swing.JLabel();
+        numClicksLabel = new javax.swing.JLabel();
         shopPanel = new javax.swing.JPanel();
         crackerUpgrade1 = new javax.swing.JButton();
         toolUpgrade = new javax.swing.JButton();
@@ -48,14 +49,14 @@ public class crackerClicker extends javax.swing.JFrame implements Money {
         crackerUpgradeAmount = new javax.swing.JLabel();
         toolUpgradeName = new javax.swing.JLabel();
         toolUpgradeAmount = new javax.swing.JLabel();
-        tempUpgradeCost = new javax.swing.JLabel();
+        tempUpgradePrice = new javax.swing.JLabel();
         tempUpgradeName = new javax.swing.JLabel();
-        tempUpgradeMultipler = new javax.swing.JLabel();
+        tempUpgradeMultiplier = new javax.swing.JLabel();
         tempUpgradeButton = new javax.swing.JButton();
-        upgradeCost = new javax.swing.JLabel();
-        upgradeName = new javax.swing.JLabel();
-        upgradeMultiplier = new javax.swing.JLabel();
-        upgradeButton = new javax.swing.JButton();
+        clickUpgradePrice = new javax.swing.JLabel();
+        clickUpgradeName = new javax.swing.JLabel();
+        clickUpgradeMultiplier = new javax.swing.JLabel();
+        upgradeClickButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(350, 490));
@@ -98,7 +99,11 @@ public class crackerClicker extends javax.swing.JFrame implements Money {
         nextAchievementBox.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         nextAchievementBox.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         nextAchievementBox.setText("Next Achievement: Level 1, 10 clicks");
-        gamePanel.add(nextAchievementBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 326, 350, 70));
+        gamePanel.add(nextAchievementBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 320, 350, 40));
+
+        numClicksLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        numClicksLabel.setText("0 clicks");
+        gamePanel.add(numClicksLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 370, 350, -1));
 
         mainPanel.add(gamePanel, "gameCard");
 
@@ -144,35 +149,45 @@ public class crackerClicker extends javax.swing.JFrame implements Money {
         toolUpgradeAmount.setText("2x income");
         shopPanel.add(toolUpgradeAmount, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 280, 180, 40));
 
-        tempUpgradeCost.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        tempUpgradeCost.setText("5 Tokens");
-        shopPanel.add(tempUpgradeCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 200, 170, 40));
+        tempUpgradePrice.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tempUpgradePrice.setText("5 Tokens");
+        shopPanel.add(tempUpgradePrice, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 200, 170, 40));
 
         tempUpgradeName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tempUpgradeName.setText("Temporary Boost Upgrade");
         shopPanel.add(tempUpgradeName, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 240, 170, 40));
 
-        tempUpgradeMultipler.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        tempUpgradeMultipler.setText("2x income for 10 clicks");
-        shopPanel.add(tempUpgradeMultipler, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 280, 170, 40));
+        tempUpgradeMultiplier.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        tempUpgradeMultiplier.setText("2x income for 10 clicks");
+        shopPanel.add(tempUpgradeMultiplier, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 280, 170, 40));
 
         tempUpgradeButton.setText("Temporary Boost");
+        tempUpgradeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tempUpgradeButtonActionPerformed(evt);
+            }
+        });
         shopPanel.add(tempUpgradeButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 330, 170, 50));
 
-        upgradeCost.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        upgradeCost.setText("10 Tokens");
-        shopPanel.add(upgradeCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 10, 170, 40));
+        clickUpgradePrice.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        clickUpgradePrice.setText("2 Tokens");
+        shopPanel.add(clickUpgradePrice, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 10, 170, 40));
 
-        upgradeName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        upgradeName.setText("Click Multiplier");
-        shopPanel.add(upgradeName, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 50, 170, 40));
+        clickUpgradeName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        clickUpgradeName.setText("Click Upgrade 1");
+        shopPanel.add(clickUpgradeName, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 50, 170, 40));
 
-        upgradeMultiplier.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        upgradeMultiplier.setText("2x clicks");
-        shopPanel.add(upgradeMultiplier, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 90, 170, 40));
+        clickUpgradeMultiplier.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        clickUpgradeMultiplier.setText("2x clicks");
+        shopPanel.add(clickUpgradeMultiplier, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 90, 170, 40));
 
-        upgradeButton.setText("Upgrade Click Mult.");
-        shopPanel.add(upgradeButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 140, 170, 50));
+        upgradeClickButton.setText("Upgrade Click Mult.");
+        upgradeClickButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                upgradeClickButtonActionPerformed(evt);
+            }
+        });
+        shopPanel.add(upgradeClickButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 140, 170, 50));
 
         mainPanel.add(shopPanel, "shopCard");
 
@@ -195,12 +210,18 @@ public class crackerClicker extends javax.swing.JFrame implements Money {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        currentMoneyValue = currentMoneyValue + (crackerValue * toolMultiplier);
+        
+        if (numClicks <= tempUpgradeEnd)
+            currentMoneyValue = currentMoneyValue + (crackerValue * toolMultiplier * numPerClick * tempUpgradeValue);
+        else
+            currentMoneyValue = currentMoneyValue + (crackerValue * toolMultiplier * numPerClick);
         setMoney();
         
-        numClicks++;
+        numClicks+= numPerClick;
+        numClicksLabel.setText(numClicks + " clicks");
+        
         try {
-            if(numClicks == inventory.getAchievement().getNumClicks())
+            if(numClicks >= inventory.getAchievement().getNumClicks())
         {
             currentTokens += inventory.getAchievement().getNumTokens();
             tokensBox.setText("Tokens: " + currentTokens);
@@ -260,17 +281,68 @@ public class crackerClicker extends javax.swing.JFrame implements Money {
         card.next(mainPanel);
     }//GEN-LAST:event_openShopButtonActionPerformed
 
+    private void upgradeClickButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_upgradeClickButtonActionPerformed
+        try {
+            if (currentTokens >= shop.getClickUpgrade(inventory.getCurrentClickUpgrade()).getPrice())
+            {
+                currentTokens -= shop.getClickUpgrade(inventory.getCurrentClickUpgrade()).getPrice();
+                numPerClick = ((ClickUpgrade)shop.getClickUpgrade(inventory.getCurrentClickUpgrade())).getClickMultiplier();
+
+                
+                inventory.nextClickUpgrade();
+            }
+        }
+        catch (Exception e)
+        {
+            
+        }
+        finally
+        {
+            setShopClickUpgrade();
+            setTokens();
+        }
+    }//GEN-LAST:event_upgradeClickButtonActionPerformed
+
+    private void tempUpgradeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tempUpgradeButtonActionPerformed
+        try {
+            if (currentTokens >= shop.getTempUpgrade(inventory.getCurrentClickUpgrade()).getPrice())
+            {
+                currentTokens -= shop.getTempUpgrade(inventory.getCurrentClickUpgrade()).getPrice();
+                tempUpgradeValue = ((TempUpgrade)shop.getTempUpgrade(inventory.getCurrentClickUpgrade())).getMultiplier();
+                tempUpgradeEnd = numClicks + ((TempUpgrade)shop.getTempUpgrade(inventory.getCurrentTempUpgrade())).getLength();
+                
+                inventory.nextTempUpgrade();
+            }
+        }
+        catch (Exception e)
+        {
+            
+        }
+        finally
+        {
+            setShopTempUpgrade();
+            setTokens();
+        }
+    }//GEN-LAST:event_tempUpgradeButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
     private int crackerValue = 1;
-    private int currentMoneyValue = 0;
+    private long currentMoneyValue = 0;
     private int currentTokens = 0;
+    
+    //upgrade values
     private int toolMultiplier = 1;
     private int addedProductivity = 1;
+    private int numPerClick = 1;
+    
     private int numClicks = 0;
     private Inventory inventory = new Inventory();
     private static Shop shop = new Shop();
+    
+    private int tempUpgradeEnd = 0;
+    private int tempUpgradeValue = 1;
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -311,7 +383,8 @@ public class crackerClicker extends javax.swing.JFrame implements Money {
         });
     }
     
-    @Override public void setMoney() {
+    @Override
+    public void setMoney() {
         String money = ("$" + currentMoneyValue);
         if (currentMoneyValue >= 1000) {
             money = money.substring(0, money.length() - 3) + "," + money.substring(money.length() - 3);
@@ -319,18 +392,34 @@ public class crackerClicker extends javax.swing.JFrame implements Money {
         if (currentMoneyValue >= 1000000) {
             money = money.substring(0, money.length() - 7) + "," + money.substring(money.length() - 7);
         }
+        if (currentMoneyValue >= 1000000000) {
+            money = money.substring(0, money.length() - 11) + "B";
+                    }
         currentMoney.setText(money);
         moneyPerClick.setText("$" + crackerValue * toolMultiplier * addedProductivity + " / click" );
     }
     
+    public void setTokens(){
+        tokensBox.setText("Tokens: " + currentTokens);
+    }
+    
     private static void fillShop() {
         //add crackers
-        shop.addCracker("Cracker 1", 10, 5);
-        shop.addCracker("Cracker 2", 200, 10);
+        shop.addCracker("Cracker 1", 10, 2);
+        shop.addCracker("Cracker 2", 500, 5);
 
         //add tools
-        shop.addTool("Tool 1", 100, 2);
+        shop.addTool("Tool 1", 200, 2);
         shop.addTool("Tool 2", 1000, 5);
+        
+        //add clickUpgrades
+        shop.addClickUpgrade("Click Upgrade 1", 2, 2);
+        shop.addClickUpgrade("Click Upgrade 2", 5, 3);
+        shop.addClickUpgrade("Click Upgrade 3", 10, 5);
+        
+        //add tempUpgrades
+        shop.addTempUpgrade("Temp Upgrade 1", 5, 10, 3);
+        shop.addTempUpgrade("Temp Upgrade 2", 10, 20, 5);
     }
 
     private void setShopCracker() {
@@ -356,8 +445,38 @@ public class crackerClicker extends javax.swing.JFrame implements Money {
             toolUpgradeAmount.setText("");
         }
     }
+    
+    private void setShopClickUpgrade(){
+        try {
+            clickUpgradePrice.setText(shop.getClickUpgrade(inventory.getCurrentClickUpgrade()).getPrice() + " Tokens");
+            clickUpgradeName.setText(shop.getClickUpgrade(inventory.getCurrentClickUpgrade()).getName());
+            clickUpgradeMultiplier.setText(((ClickUpgrade)shop.getClickUpgrade(inventory.getCurrentClickUpgrade())).getClickMultiplier() + "x clicks");
+        }
+        catch (IndexOutOfBoundsException e){
+            clickUpgradePrice.setText("");
+            clickUpgradeName.setText("No more click upgrades");
+            clickUpgradeMultiplier.setText("");
+        }
+    }
+    
+    private void setShopTempUpgrade(){
+        try {
+            tempUpgradePrice.setText(shop.getTempUpgrade(inventory.getCurrentClickUpgrade()).getPrice() + " Tokens");
+            tempUpgradeName.setText(shop.getTempUpgrade(inventory.getCurrentClickUpgrade()).getName());
+            tempUpgradeMultiplier.setText(((TempUpgrade)shop.getTempUpgrade(inventory.getCurrentClickUpgrade())).getMultiplier() + "x for " 
+            + ((TempUpgrade)shop.getTempUpgrade(inventory.getCurrentClickUpgrade())).getLength() + " clicks");
+        }
+        catch (IndexOutOfBoundsException e){
+            tempUpgradePrice.setText("");
+            tempUpgradeName.setText("No more temp upgrades");
+            tempUpgradeMultiplier.setText("");
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel clickUpgradeMultiplier;
+    private javax.swing.JLabel clickUpgradeName;
+    private javax.swing.JLabel clickUpgradePrice;
     private javax.swing.JButton crackerUpgrade1;
     private javax.swing.JLabel crackerUpgradeAmount;
     private javax.swing.JLabel crackerUpgradeName;
@@ -368,20 +487,18 @@ public class crackerClicker extends javax.swing.JFrame implements Money {
     private javax.swing.JPanel mainPanel;
     private javax.swing.JLabel moneyPerClick;
     private javax.swing.JLabel nextAchievementBox;
+    private javax.swing.JLabel numClicksLabel;
     private javax.swing.JButton openShopButton;
     private javax.swing.JPanel shopPanel;
     private javax.swing.JButton tempUpgradeButton;
-    private javax.swing.JLabel tempUpgradeCost;
-    private javax.swing.JLabel tempUpgradeMultipler;
+    private javax.swing.JLabel tempUpgradeMultiplier;
     private javax.swing.JLabel tempUpgradeName;
+    private javax.swing.JLabel tempUpgradePrice;
     private javax.swing.JLabel tokensBox;
     private javax.swing.JButton toolUpgrade;
     private javax.swing.JLabel toolUpgradeAmount;
     private javax.swing.JLabel toolUpgradeName;
     private javax.swing.JLabel toolUpgradePrice;
-    private javax.swing.JButton upgradeButton;
-    private javax.swing.JLabel upgradeCost;
-    private javax.swing.JLabel upgradeMultiplier;
-    private javax.swing.JLabel upgradeName;
+    private javax.swing.JButton upgradeClickButton;
     // End of variables declaration//GEN-END:variables
 }

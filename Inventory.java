@@ -16,6 +16,8 @@ public class Inventory {
     private int currentCracker = 0;
     private ArrayList<Achievement> achievements = new ArrayList<>();
     private int currentAchievement = 0;
+    private int currentClickUpgrade = 0;
+    private int currentTempUpgrade = 0;
 
     public Inventory()
     {
@@ -26,7 +28,7 @@ public class Inventory {
         ArrayList<Achievement> achievements;
         achievements = new ArrayList<>();
         
-        Achievement achievementOne = new Achievement("level 1", 10, 1);
+        Achievement achievementOne = new Achievement("level 1", 10, 2);
         achievements.add(achievementOne);
         
         Achievement achievementTwo = new Achievement("Level 2", 50, 5);
@@ -34,6 +36,9 @@ public class Inventory {
         
         Achievement achievementThree = new Achievement("Level 3", 100, 10);
         achievements.add(achievementThree);
+        
+        Achievement achievementFour = new Achievement("Level 4", 1000, 15);
+        achievements.add(achievementFour);
         
         this.achievements = achievements;
     }
@@ -66,6 +71,22 @@ public class Inventory {
         this.currentTool = currentTool;
     }
 
+    public int getCurrentClickUpgrade() {
+        return currentClickUpgrade;
+    }
+
+    public void setCurrentClickUpgrade(int currentClickUpgrade) {
+        this.currentClickUpgrade = currentClickUpgrade;
+    }
+
+    public int getCurrentTempUpgrade() {
+        return currentTempUpgrade;
+    }
+
+    public void setCurrentTempUpgrade(int currentTempUpgrade) {
+        this.currentTempUpgrade = currentTempUpgrade;
+    }
+
     public int getCurrentCracker() {
         return currentCracker;
     }
@@ -82,6 +103,16 @@ public class Inventory {
     public void nextTool()
     {
         currentTool++;
+    }
+    
+    public void nextClickUpgrade()
+    {
+        currentClickUpgrade++;
+    }
+    
+    public void nextTempUpgrade()
+    {
+        currentTempUpgrade++;
     }
     
 }

@@ -9,10 +9,15 @@
  * @author brewe
  */
 public class ClickUpgrade extends Item {
-    private int clickMultipier;
+    private int clickMultiplier;
     
     public void setClickMultiplier(int clickMultiplier)
     {
-        this.clickMultipier = clickMultiplier;
+        this.clickMultiplier = clickMultiplier;
+    }
+    
+    public int getClickMultiplier()
+    {
+        return clickMultiplier;
     }
 }
