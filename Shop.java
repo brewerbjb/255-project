@@ -45,32 +45,31 @@ public class Shop {
         clickUpgrades.add(item);
     }
     
-    public void addTempUpgrade(String name, int price, int length, int multiplier)
+    public void addAutoClickerUpgrade(String name, int price, int multiplier)
     {
-        TempUpgrade item = new TempUpgrade();
+        AutoClickerUpgrade item = new AutoClickerUpgrade();
         item.setName(name);
         item.setPrice (price);
-        item.setLength(length);
         item.setMultiplier(multiplier);
         tempUpgrades.add(item);
     }
 
-    public Item getClickUpgrade(int clickUpgrade) {
-        return clickUpgrades.get(clickUpgrade);
+    public ClickUpgrade getClickUpgrade(int clickUpgrade) {
+        return (ClickUpgrade)clickUpgrades.get(clickUpgrade);
     }
 
-    public Item getTempUpgrade(int tempUpgrade) {
-        return tempUpgrades.get(tempUpgrade);
+    public AutoClickerUpgrade getAutoClickerUpgrade(int tempUpgrade) {
+        return (AutoClickerUpgrade)tempUpgrades.get(tempUpgrade);
     }
     
-    public Item getCracker(int cracker)
+    public Cracker getCracker(int cracker)
     {
-        return crackers.get(cracker);
+        return (Cracker)crackers.get(cracker);
     }
     
-    public Item getTool(int tool)
+    public Tool getTool(int tool)
     {
-        return tools.get(tool);
+        return (Tool)tools.get(tool);
     }
     
 }

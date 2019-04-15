@@ -161,7 +161,7 @@ public class crackerClicker extends javax.swing.JFrame implements Money {
         tempUpgradeMultiplier.setText("2x income for 10 clicks");
         shopPanel.add(tempUpgradeMultiplier, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 280, 170, 40));
 
-        tempUpgradeButton.setText("Temporary Boost");
+        tempUpgradeButton.setText("Auto-Click Upgrade");
         tempUpgradeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tempUpgradeButtonActionPerformed(evt);
@@ -210,29 +210,28 @@ public class crackerClicker extends javax.swing.JFrame implements Money {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
-        if (numClicks <= tempUpgradeEnd)
-            currentMoneyValue = currentMoneyValue + (crackerValue * toolMultiplier * numPerClick * tempUpgradeValue);
-        else
-            currentMoneyValue = currentMoneyValue + (crackerValue * toolMultiplier * numPerClick);
+
+        if (!click.isAlive()) {
+            click.start();
+        }
+
+        currentMoneyValue = currentMoneyValue + (crackerValue * toolMultiplier * numPerClick);
         setMoney();
-        
-        numClicks+= numPerClick;
+
+        numClicks += numPerClick;
         numClicksLabel.setText(numClicks + " clicks");
-        
+
         try {
-            if(numClicks >= inventory.getAchievement().getNumClicks())
-        {
-            currentTokens += inventory.getAchievement().getNumTokens();
-            tokensBox.setText("Tokens: " + currentTokens);
-            inventory.nextAchievement();
-            
-            nextAchievementBox.setText("Next Achievement: " + inventory.getAchievement().getName() + ", " +
-            inventory.getAchievement().getNumClicks() + " clicks");
-            
-        }
-        }
-        catch (Exception e){
+            if (numClicks >= inventory.getAchievement().getNumClicks()) {
+                currentTokens += inventory.getAchievement().getNumTokens();
+                tokensBox.setText("Tokens: " + currentTokens);
+                inventory.nextAchievement();
+
+                nextAchievementBox.setText("Next Achievement: " + inventory.getAchievement().getName() + ", "
+                        + inventory.getAchievement().getNumClicks() + " clicks");
+
+            }
+        } catch (Exception e) {
             nextAchievementBox.setText("All achievements complete!");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -241,7 +240,7 @@ public class crackerClicker extends javax.swing.JFrame implements Money {
         try {
             if (currentMoneyValue >= shop.getTool(inventory.getCurrentTool()).getPrice()) {
                 currentMoneyValue -= shop.getTool(inventory.getCurrentTool()).getPrice();
-                toolMultiplier = ((Tool) shop.getTool(inventory.getCurrentTool())).getToolEfficiency();
+                toolMultiplier = shop.getTool(inventory.getCurrentTool()).getToolEfficiency();
 
                 inventory.nextTool();
             }
@@ -259,7 +258,7 @@ public class crackerClicker extends javax.swing.JFrame implements Money {
         try {
             if (currentMoneyValue >= shop.getCracker(inventory.getCurrentCracker()).getPrice()) {
                 currentMoneyValue -= shop.getCracker(inventory.getCurrentCracker()).getPrice();
-                crackerValue = ((Cracker) shop.getCracker(inventory.getCurrentCracker())).getCrackerRevenue();
+                crackerValue = shop.getCracker(inventory.getCurrentCracker()).getCrackerRevenue();
 
                 inventory.nextCracker();
             }
@@ -276,6 +275,8 @@ public class crackerClicker extends javax.swing.JFrame implements Money {
     private void openShopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openShopButtonActionPerformed
         setShopCracker();
         setShopTool();
+        setShopClickUpgrade();
+        setShopAutoClickerUpgrade();
 
         CardLayout card = (CardLayout) mainPanel.getLayout();
         card.next(mainPanel);
@@ -283,21 +284,15 @@ public class crackerClicker extends javax.swing.JFrame implements Money {
 
     private void upgradeClickButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_upgradeClickButtonActionPerformed
         try {
-            if (currentTokens >= shop.getClickUpgrade(inventory.getCurrentClickUpgrade()).getPrice())
-            {
+            if (currentTokens >= shop.getClickUpgrade(inventory.getCurrentClickUpgrade()).getPrice()) {
                 currentTokens -= shop.getClickUpgrade(inventory.getCurrentClickUpgrade()).getPrice();
-                numPerClick = ((ClickUpgrade)shop.getClickUpgrade(inventory.getCurrentClickUpgrade())).getClickMultiplier();
+                numPerClick = shop.getClickUpgrade(inventory.getCurrentClickUpgrade()).getClickMultiplier();
 
-                
                 inventory.nextClickUpgrade();
             }
-        }
-        catch (Exception e)
-        {
-            
-        }
-        finally
-        {
+        } catch (Exception e) {
+
+        } finally {
             setShopClickUpgrade();
             setTokens();
         }
@@ -305,22 +300,16 @@ public class crackerClicker extends javax.swing.JFrame implements Money {
 
     private void tempUpgradeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tempUpgradeButtonActionPerformed
         try {
-            if (currentTokens >= shop.getTempUpgrade(inventory.getCurrentClickUpgrade()).getPrice())
-            {
-                currentTokens -= shop.getTempUpgrade(inventory.getCurrentClickUpgrade()).getPrice();
-                tempUpgradeValue = ((TempUpgrade)shop.getTempUpgrade(inventory.getCurrentClickUpgrade())).getMultiplier();
-                tempUpgradeEnd = numClicks + ((TempUpgrade)shop.getTempUpgrade(inventory.getCurrentTempUpgrade())).getLength();
-                
-                inventory.nextTempUpgrade();
+            if (currentTokens >= shop.getAutoClickerUpgrade(inventory.getCurrentAutoClickUpgrade()).getPrice()) {
+                currentTokens -= shop.getAutoClickerUpgrade(inventory.getCurrentAutoClickUpgrade()).getPrice();
+                numAutoClicks = shop.getAutoClickerUpgrade(inventory.getCurrentAutoClickUpgrade()).getMultiplier();
+
+                inventory.nextAutoClickerUpgrade();
             }
-        }
-        catch (Exception e)
-        {
-            
-        }
-        finally
-        {
-            setShopTempUpgrade();
+        } catch (Exception e) {
+
+        } finally {
+            setShopAutoClickerUpgrade();
             setTokens();
         }
     }//GEN-LAST:event_tempUpgradeButtonActionPerformed
@@ -331,18 +320,18 @@ public class crackerClicker extends javax.swing.JFrame implements Money {
     private int crackerValue = 1;
     private long currentMoneyValue = 0;
     private int currentTokens = 0;
-    
+
     //upgrade values
     private int toolMultiplier = 1;
     private int addedProductivity = 1;
     private int numPerClick = 1;
-    
+
     private int numClicks = 0;
     private Inventory inventory = new Inventory();
     private static Shop shop = new Shop();
-    
-    private int tempUpgradeEnd = 0;
-    private int tempUpgradeValue = 1;
+
+    private Thread click = new Thread(new Click());
+    private int numAutoClicks = 0;
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -381,8 +370,25 @@ public class crackerClicker extends javax.swing.JFrame implements Money {
                 new crackerClicker().setVisible(true);
             }
         });
+
     }
-    
+
+    public class Click implements Runnable {
+
+        public void run() {
+            while (true) {
+                currentMoneyValue = currentMoneyValue + (crackerValue * toolMultiplier * numAutoClicks);
+                setMoney();
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+    }
+
     @Override
     public void setMoney() {
         String money = ("$" + currentMoneyValue);
@@ -394,15 +400,15 @@ public class crackerClicker extends javax.swing.JFrame implements Money {
         }
         if (currentMoneyValue >= 1000000000) {
             money = money.substring(0, money.length() - 11) + "B";
-                    }
+        }
         currentMoney.setText(money);
-        moneyPerClick.setText("$" + crackerValue * toolMultiplier * addedProductivity + " / click" );
+        moneyPerClick.setText("$" + crackerValue * toolMultiplier * addedProductivity + " / click");
     }
-    
-    public void setTokens(){
+
+    public void setTokens() {
         tokensBox.setText("Tokens: " + currentTokens);
     }
-    
+
     private static void fillShop() {
         //add crackers
         shop.addCracker("Cracker 1", 10, 2);
@@ -411,22 +417,22 @@ public class crackerClicker extends javax.swing.JFrame implements Money {
         //add tools
         shop.addTool("Tool 1", 200, 2);
         shop.addTool("Tool 2", 1000, 5);
-        
+
         //add clickUpgrades
         shop.addClickUpgrade("Click Upgrade 1", 2, 2);
         shop.addClickUpgrade("Click Upgrade 2", 5, 3);
         shop.addClickUpgrade("Click Upgrade 3", 10, 5);
-        
-        //add tempUpgrades
-        shop.addTempUpgrade("Temp Upgrade 1", 5, 10, 3);
-        shop.addTempUpgrade("Temp Upgrade 2", 10, 20, 5);
+
+        //add AutoClikcerUpgrades
+        shop.addAutoClickerUpgrade("Auto-Clicker Upgrade 1", 5, 1);
+        shop.addAutoClickerUpgrade("Auto-Clicker Upgrade 2", 10, 3);
     }
 
     private void setShopCracker() {
         try {
             crackerUpgradePrice.setText("$" + shop.getCracker(inventory.getCurrentCracker()).getPrice());
             crackerUpgradeName.setText(shop.getCracker(inventory.getCurrentCracker()).getName());
-            crackerUpgradeAmount.setText("$" + ((Cracker) shop.getCracker(inventory.getCurrentCracker())).getCrackerRevenue() + " / cracker");
+            crackerUpgradeAmount.setText("$" + shop.getCracker(inventory.getCurrentCracker()).getCrackerRevenue() + " / cracker");
         } catch (IndexOutOfBoundsException e) {
             crackerUpgradePrice.setText("");
             crackerUpgradeName.setText("No more crackers");
@@ -438,35 +444,32 @@ public class crackerClicker extends javax.swing.JFrame implements Money {
         try {
             toolUpgradePrice.setText("$" + shop.getTool(inventory.getCurrentTool()).getPrice());
             toolUpgradeName.setText(shop.getTool(inventory.getCurrentTool()).getName());
-            toolUpgradeAmount.setText(((Tool) shop.getTool(inventory.getCurrentTool())).getToolEfficiency() + "x");
+            toolUpgradeAmount.setText(shop.getTool(inventory.getCurrentTool()).getToolEfficiency() + "x");
         } catch (IndexOutOfBoundsException e) {
             toolUpgradePrice.setText("");
             toolUpgradeName.setText("No more tools");
             toolUpgradeAmount.setText("");
         }
     }
-    
-    private void setShopClickUpgrade(){
+
+    private void setShopClickUpgrade() {
         try {
             clickUpgradePrice.setText(shop.getClickUpgrade(inventory.getCurrentClickUpgrade()).getPrice() + " Tokens");
             clickUpgradeName.setText(shop.getClickUpgrade(inventory.getCurrentClickUpgrade()).getName());
-            clickUpgradeMultiplier.setText(((ClickUpgrade)shop.getClickUpgrade(inventory.getCurrentClickUpgrade())).getClickMultiplier() + "x clicks");
-        }
-        catch (IndexOutOfBoundsException e){
+            clickUpgradeMultiplier.setText(shop.getClickUpgrade(inventory.getCurrentClickUpgrade()).getClickMultiplier() + "x clicks");
+        } catch (IndexOutOfBoundsException e) {
             clickUpgradePrice.setText("");
             clickUpgradeName.setText("No more click upgrades");
             clickUpgradeMultiplier.setText("");
         }
     }
-    
-    private void setShopTempUpgrade(){
+
+    private void setShopAutoClickerUpgrade() {
         try {
-            tempUpgradePrice.setText(shop.getTempUpgrade(inventory.getCurrentClickUpgrade()).getPrice() + " Tokens");
-            tempUpgradeName.setText(shop.getTempUpgrade(inventory.getCurrentClickUpgrade()).getName());
-            tempUpgradeMultiplier.setText(((TempUpgrade)shop.getTempUpgrade(inventory.getCurrentClickUpgrade())).getMultiplier() + "x for " 
-            + ((TempUpgrade)shop.getTempUpgrade(inventory.getCurrentClickUpgrade())).getLength() + " clicks");
-        }
-        catch (IndexOutOfBoundsException e){
+            tempUpgradePrice.setText(shop.getAutoClickerUpgrade(inventory.getCurrentAutoClickUpgrade()).getPrice() + " Tokens");
+            tempUpgradeName.setText(shop.getAutoClickerUpgrade(inventory.getCurrentAutoClickUpgrade()).getName());
+            tempUpgradeMultiplier.setText(shop.getAutoClickerUpgrade(inventory.getCurrentAutoClickUpgrade()).getMultiplier() + "x every second");
+        } catch (IndexOutOfBoundsException e) {
             tempUpgradePrice.setText("");
             tempUpgradeName.setText("No more temp upgrades");
             tempUpgradeMultiplier.setText("");
